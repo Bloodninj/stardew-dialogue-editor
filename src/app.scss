@@ -1,0 +1,282 @@
+$primary: #e8a555;
+// $secondary: #a06a27;
+$secondary: #5e3c12;
+
+
+$border-color: darken($secondary, 20%);
+$border-color-dark: darken($secondary, 20%);
+$nav-tabs-link-active-bg: $secondary;
+$nav-tabs-border-color: color-contrast($primary);
+$nav-link-color: color-contrast($secondary);
+$nav-link-disabled-color: $secondary;
+$navbar-light-color: color-contrast($primary);
+$navbar-dark-color: $secondary;
+$code-color: rgb(51, 9, 74);
+$code-color-dark: rgb(24, 5, 35);
+
+@import "./scss/bootstrap.scss";
+
+$color-mode-type: media-query;
+
+
+$p8-black: #000000;
+$p8-dark-blue: #1D2B53;
+$p8-dark-purple: #7E2553;
+$p8-dark-green: #008751;
+$p8-brown: #AB5236;
+$p8-darkgrey: #5F574F;
+$p8-lightgrey: #C2C3C7;
+$p8-white: #FFF1E8;
+$p8-red: #FF004D;
+$p8-orange: #FFA300;
+$p8-yellow: #FFEC27;
+$p8-green: #00E436;
+$p8-blue: #29ADFF;
+$p8-lavender: #83769C;
+$p8-pink: #FF77A8;
+$p8-light-peach: #FFCCAA;
+$p8-extra-brownish-black: #291814;
+$p8-extra-darker-blue: #111D35;
+$p8-extra-darker-purple: #422136;
+$p8-extra-turquoise: #125359;
+$p8-extra-dark-brown: #742F29;
+$p8-extra-darker-grey: #49333B;
+$p8-extra-medium-grey: #A28879;
+$p8-extra-banana-yellow: #F3EF7D;
+$p8-extra-dark-red: #BE1250;
+$p8-extra-dark-orange: #FF6C24;
+$p8-extra-lime-green: #A8E72E;
+$p8-extra-medium-green: #00B543;
+$p8-extra-deep-blue: #065AB5;
+$p8-extra-mauve: #754665;
+$p8-extra-dark-peach: #FF6E59;
+$p8-extra-medium-peach: #FF9D81;
+
+.p8-black {
+    color: $p8-black;
+}
+.p8-dark-blue {
+    color: $p8-dark-blue;
+}
+.p8-dark-purple {
+    color: $p8-dark-purple;
+}
+.p8-dark-green {
+    color: $p8-dark-green;
+}
+.p8-brown {
+    color: $p8-brown;
+}
+.p8-darkgrey {
+    color: $p8-darkgrey;
+}
+.p8-lightgrey {
+    color: $p8-lightgrey;
+}
+.p8-white {
+    color: $p8-white;
+}
+.p8-red {
+    color: $p8-red;
+}
+.p8-orange {
+    color: $p8-orange;
+}
+.p8-yellow {
+    color: $p8-yellow;
+}
+.p8-green {
+    color: $p8-green;
+}
+.p8-blue {
+    color: $p8-blue;
+}
+.p8-lavender {
+    color: $p8-lavender;
+}
+.p8-pink {
+    color: $p8-pink;
+}
+.p8-light-peach {
+    color: $p8-light-peach;
+}
+.p8-extra-brownish-black {
+    color: $p8-extra-brownish-black;
+}
+.p8-extra-darker-blue {
+    color: $p8-extra-darker-blue;
+}
+.p8-extra-darker-purple {
+    color: $p8-extra-darker-purple;
+}
+.p8-extra-turquoise {
+    color: $p8-extra-turquoise;
+}
+.p8-extra-dark-brown {
+    color: $p8-extra-dark-brown;
+}
+.p8-extra-darker-grey {
+    color: $p8-extra-darker-grey;
+}
+.p8-extra-medium-grey {
+    color: $p8-extra-medium-grey;
+}
+.p8-extra-banana-yellow {
+    color: $p8-extra-banana-yellow;
+}
+.p8-extra-dark-red {
+    color: $p8-extra-dark-red;
+}
+.p8-extra-dark-orange {
+    color: $p8-extra-dark-orange;
+}
+.p8-extra-lime-green {
+    color: $p8-extra-lime-green;
+}
+.p8-extra-medium-green {
+    color: $p8-extra-medium-green;
+}
+.p8-extra-deep-blue {
+    color: $p8-extra-deep-blue;
+}
+.p8-extra-mauve {
+    color: $p8-extra-mauve;
+}
+.p8-extra-dark-peach {
+    color: $p8-extra-dark-peach;
+}
+.p8-extra-medium-peach {
+    color: $p8-extra-medium-peach;
+}
+
+/* .p8-white, .p8-yellow, .p8-light-peach {
+    background-color: $p8-black;
+    border: 0.15em solid $p8-black;
+    border-radius: 0.15em;
+} */
+
+.pico-string {
+    font-family: "PICO-8", monospace;
+    text-transform: lowercase;
+    color: $p8-white;
+    background-color: black;
+}
+
+@font-face {
+    font-family: "PICO-8";
+    src:
+        url("/fonts/pico-8.woff2") format("woff2"),
+        url("/fonts/pico-8.woff") format("woff");
+}
+
+@font-face {
+    font-family: "StardewValley";
+    src: url("/fonts/StardewValley.woff2") format("woff2");
+}
+
+
+[lang="mn"] * {
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+}
+
+[lang="ar"] * {
+    direction: rtl;
+}
+
+html {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+body {
+    // font-family: serif;
+
+    @supports(background-image: linear-gradient(to bottom in oklch,oklch(14% 0.33 248) 0%, oklch(80% 0.5 225) 100%)) {
+        background-image: url("/images/bg/hills.png"), url("/images/bg/stars.png"), linear-gradient(to bottom, in oklch, $p8-extra-darker-blue, $p8-blue);
+    }
+    background-image: url("/images/bg/hills.png"), url("/images/bg/stars.png"), linear-gradient(to bottom, #27008f 0%, #00d7ff 100%);
+    background-position-y: bottom, top, bottom;
+    background-attachment: fixed, fixed, default;
+    background-repeat: repeat-x, repeat-x, no-repeat;
+    background-size: default;
+    
+    @include color-mode(dark) {
+        @supports(background-image: linear-gradient(to bottom in oklch,oklch(0% 0.21 248) 0%, oklch(29% 0.23 225) 100%)) {
+            background-image: url("/images/bg/hills-dark.png"), url("/images/bg/stars.png"),linear-gradient(to bottom in oklch,oklch(0% 0.21 248) 0%, oklch(29% 0.23 225) 100%);
+        }
+        background-image: url("/images/bg/hills-dark.png"), url("/images/bg/stars.png"), linear-gradient(to bottom, #080030 0%, #002f7e 100%);
+      
+        color: $p8-white;
+        color-scheme: dark;
+    }
+}
+
+.hills-bg {
+    background-image: url("/images/bg/hills.png");
+    
+}
+
+[contenteditable] p:hover, p:focus {
+    transition: ease-in-out 0.25s;
+    background-color: seashell;
+    @include color-mode(dark) {
+        background-color: darkslategrey;
+    }
+}
+
+.stardew-font {
+    font-family: "StardewValley", sans-serif;
+}
+
+.stardew-text-box {
+    background-color: transparent;
+    border: 13px solid;
+    border-image: url("/images/ui/textbox-slice.png");
+    border-image-slice: 13 fill;
+    border-image-width: 1rem;
+    // padding: 0.25rem;
+    color: color-contrast($primary);
+
+    // font-family: "StardewValley", sans-serif;
+    // font-size: 1.5em;
+}
+
+.stardew-text-scroll {
+    // border-width: 13px;
+    border-style: solid;
+    border-image: url("/images/ui/scroll-slice.png");
+    border-image-slice: 11 fill;
+    border-image-width: 1rem;
+    padding: 0.75rem 1rem;
+    color: color-contrast($primary);
+    font-family: "StardewValley", sans-serif;
+    // font-size: 3em;
+}
+
+.stardew-dialogue {
+    grid-area: "text";
+}
+
+.stardew-portrait {
+    grid-area: "portrait";
+}
+
+.stardew-dialogue-layout {
+    display: grid;
+    grid-template-areas: "text portrait";
+    grid-template-columns: 2fr 1fr;
+}
+
+*:disabled {
+    cursor: not-allowed;
+}
+
+input, select, textarea {
+    background-color: $secondary !important;
+    color: color-contrast($secondary) !important;
+    &::placeholder {
+        color: color-contrast($secondary);
+    }
+}
+
