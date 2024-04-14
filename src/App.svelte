@@ -2,9 +2,13 @@
   import { FluentBundle, FluentResource } from "@fluent/bundle";
   import { negotiateLanguages } from "@fluent/langneg";
   import { writable, derived, get } from "svelte/store";
-  import { fly } from "svelte/transition";
+  import { flip } from "svelte/animate";
+  import { send, receive } from "./transition"
+  import { fade, fly } from "svelte/transition";
   import StardewBox from "./components/StardewBox.svelte";
   import DialogueMakerModal from "./components/DialogueMakerModal.svelte";
+    import DeleteWarningModal from "./components/QuestionModal.svelte";
+    import QuestionModal from "./components/QuestionModal.svelte";
 
   const controlColourCodes = {
     "0": "p8-black",
@@ -57,8 +61,11 @@
   let langResourceMap = new Map();
 
   export const stardewPlayerGender = writable("male");
-  let showModal = false;
+  let showDialogueModal = false;
+  let showDeleteModal = false;
   let editMode = false;
+  let warnOnDelete = true;
+  let userChoseDelete = false;
   let currentStringEditIndex = -1;
   $: inputString = "";
 
@@ -250,7 +257,9 @@
       console.log(msgText);
 
       // console.log(msgText);
-      formattedArr.push(msgText);
+      if (msgText.male.text) {
+        formattedArr.push(msgText);
+      }
     }
     // console.log(formattedArr);
     return formattedArr;
@@ -389,6 +398,12 @@
               <input class="form-check-input" type="checkbox" id="fluent-debug-checkbox" bind:checked={fluentDebugMode} />
             </div>
           </form>
+          <form class="d-flex mx-2">
+            <div class="form-check form-check-inline">
+              <label class="form-label" for="warn-on-dialogue-delete-checkbox">{getMessage("stardew-dialogue-maker-warn-on-dialogue-delete-checkbox")}</label>
+              <input class="form-check-input" type="checkbox" id="warn-on-dialogue-delete-checkbox" bind:checked={warnOnDelete} />
+            </div>
+          </form>
       </div>
     </div>
   </nav>
@@ -407,10 +422,10 @@
               <input class="form-control" type="number" bind:value={$testLocaleCount} min="1" aria-label="Number formatting test" />   
             </div>
             <div class="col-md-auto">
-              <select class="form-select" bind:value={$stardewPlayerGender} aria-label={getMessage("stardew-farmer-gender-label")}>
-                <option value="male">{getMessage("stardew-farmer-gender-select-male")}</option>
-                <option value="female">{getMessage("stardew-farmer-gender-select-female")}</option>
-                <option value="nonbinary">{getMessage("stardew-farmer-gender-select-nonbinary")}</option>
+              <select class="form-select" bind:value={$stardewPlayerGender} aria-label={getMessage("farmer-gender-select-label")}>
+                <option value="male">{getMessage("farmer-gender-select-male")}</option>
+                <option value="female">{getMessage("farmer-gender-select-female")}</option>
+                <option value="nonbinary">{getMessage("farmer-gender-select-nonbinary")}</option>
               </select>
             </div>
         </div>
@@ -445,31 +460,61 @@
 
       </form>
       
-      
-      {#each stardewDisplayDialogue as msg, i}
-      {#key msg}
-      <StardewBox hasFemale={msg.female.text != null} hasNonbinary={msg.nonbinary.text != null} suffix={generateLetters(6)} bind:getMessage > 
-          <span slot="male">
-            <p class="stardew-dialogue">{msg.male.text}</p>
-            <h2 class="stardew-expression">{msg.male.expression}</h2>
-          </span>
-          <div slot="female">
-            <p class="stardew-dialogue">{msg.female.text}</p>
-            <h2 class="stardew-expression">{msg.female.expression}</h2>
-          </div>
-          <div slot="nonbinary">
-            <p class="stardew-dialogue">{msg.nonbinary.text}</p>
-            <h2 class="stardew-expression">{msg.nonbinary.expression}</h2>
-          </div>
-      </StardewBox>
-      <div class="d-grid d-md-block gap-2 mb-2">
-          <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showModal = true; editMode = true}}>{getMessage("stardew-dialogue-maker-edit-button")}</button>
-          <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showModal = true; editMode=false}}>{getMessage("stardew-dialogue-maker-add-new-text")}</button>
-          <button class="btn btn-primary border border-secondary">{getMessage("stardew-dialogue-maker-add-new-command")}</button>
-          <button class="btn btn-danger border border-danger-subtle">{getMessage("stardew-dialogue-maker-remove-message")}</button>
+      {#if $stardewSplitDialogue.length}
+      <ul class="list-unstyled">
+
+        {#each stardewDisplayDialogue as msg, i (msg)}
+        <li
+          in:fly={{ y: 100, duration: 400 }}
+          out:fade={{ duration: 200 }}
+          animate:flip={{ duration: 400 }}>
+          <StardewBox hasFemale={msg.female.text != null} hasNonbinary={msg.nonbinary.text != null} suffix={generateLetters(6)} bind:getMessage> 
+            <span slot="male">
+              <p class="stardew-dialogue">{msg.male.text}</p>
+              <h2 class="stardew-expression">{msg.male.expression}</h2>
+            </span>
+            <div slot="female">
+              <p class="stardew-dialogue">{msg.female.text}</p>
+              <h2 class="stardew-expression">{msg.female.expression}</h2>
+            </div>
+            <div slot="nonbinary">
+              <p class="stardew-dialogue">{msg.nonbinary.text}</p>
+              <h2 class="stardew-expression">{msg.nonbinary.expression}</h2>
+            </div>
+          </StardewBox>
+          <div class="d-grid d-md-block gap-2 mb-2">
+            <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showDialogueModal = true; editMode = true}}>{getMessage("stardew-dialogue-maker-edit-button")}</button>
+            <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showDialogueModal = true; editMode=false}}>{getMessage("stardew-dialogue-maker-add-new-text")}</button>
+            <button class="btn btn-primary border border-secondary">{getMessage("stardew-dialogue-maker-add-new-command")}</button>
+            <button class="btn btn-danger border border-danger-subtle"
+            on:click={(e)=> {
+              currentStringEditIndex = i;
+              if (warnOnDelete) {
+                showDeleteModal = true;
+              }
+            }}>{getMessage("stardew-dialogue-maker-delete-message")}</button>
       </div>
-      {/key}
-      {/each}
+    </li>
+    {/each}
+    </ul>
+      {:else}
+        <p>{getMessage("message-list-no-messages")}</p>
+        <div class="row">
+          <div class="col-12 text-center">
+            <button class="btn btn-primary border-primary-subtle"
+            on:click={(e) => {
+              currentStringEditIndex = 0; showDialogueModal = true;
+            }}
+            on:close={(e) => {
+              if (e.returnValue) {
+
+              }
+            }}>
+              {getMessage("stardew-dialogue-maker-add-new-message")}
+            </button>
+          </div>
+        </div>
+      {/if}
 
       <div>
         <label class="form-label" for="dialogue-raw-string-code">{getMessage("stardew-dialogue-maker-raw-output-label")}</label>
@@ -479,7 +524,13 @@
 
       </div>
       
-      <DialogueMakerModal bind:showModal bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} bind:editMode></DialogueMakerModal>
+      <DialogueMakerModal bind:showModal={showDialogueModal} bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} bind:editMode></DialogueMakerModal>
+      <QuestionModal bind:showModal={showDeleteModal} bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} >
+        <span slot="header-text">{getMessage("delete-warning-header")}</span>
+        <span slot="question">{getMessage("delete-warning-question")}</span>
+        <span slot="yes-button">{getMessage("delete-warning-yes-button")}</span>
+        <span slot="no-button">{getMessage("delete-warning-no-button")}</span>
+      </QuestionModal>
 
 
       <!-- <form>

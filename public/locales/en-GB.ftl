@@ -31,10 +31,18 @@ pico8-add-message = Add message
 pico8-add-message-placeholder = This is a test message
 
 page-header = Stardew Dialogue Editor
-stardew-farmer-gender-label = Gender
-stardew-farmer-gender-select-male = Male
-stardew-farmer-gender-select-female = Female
-stardew-farmer-gender-select-nonbinary = Non-binary
+stardew-dialogue-maker-warn-on-dialogue-delete-checkbox = Warn on message deletion
+delete-warning-header = Warning!
+delete-warning-question = Are you sure you want to delete this message?
+delete-warning-yes-button = Yes, delete this
+delete-warning-no-button = No, keep it
+
+message-list-no-messages = There are no messages in this dialogue.
+
+farmer-gender-select-label = Gender
+farmer-gender-select-male = Male
+farmer-gender-select-female = Female
+farmer-gender-select-nonbinary = Non-binary
 stardew-farmer-no-nonbinary-error = !!! No non-binary text for this message! !!!
 stardew-dialogue-maker-gender-any = Any
 stardew-dialogue-maker-gender-male = Male
@@ -56,7 +64,7 @@ stardew-dialogue-maker-expression-angry = Angry
 stardew-dialogue-maker-edit-button = Edit
 stardew-dialogue-maker-save-changes-button = Save changes
 stardew-dialogue-maker-add-new-message = Add message
-stardew-dialogue-maker-remove-message = Delete
+stardew-dialogue-maker-delete-message = Delete
 stardew-dialogue-maker-text-placeholder = Bit nippy out, innit?
 stardew-dialogue-maker-raw-output-label = Raw output:
 stardew-dialogue-maker-input-string-input-label = Input string:

@@ -32,7 +32,7 @@ browser-locales-count = {
 pico8-add-message = Dodajte sporočilo
 pico8-add-message-placeholder = To je testno sporočilo
 
-stardew-farmer-gender-label = spol
-stardew-farmer-gender-select-male = moški
-stardew-farmer-gender-select-female = ženska
-stardew-farmer-gender-select-nonbinary = nebinarni
+farmer-gender-select-label = spol
+farmer-gender-select-male = moški
+farmer-gender-select-female = ženska
+farmer-gender-select-nonbinary = nebinarni

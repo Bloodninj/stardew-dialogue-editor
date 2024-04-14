@@ -29,8 +29,8 @@ browser-locales-count = {
 pico8-add-message = メッセージを追加
 pico8-add-message-placeholder = これはテストメッセージです。
 
-stardew-farmer-gender-label = ジェンダー
-stardew-farmer-gender-select-male = 男性
-stardew-farmer-gender-select-female = 女性
-stardew-farmer-gender-select-nonbinary = ノンバイナリー
+farmer-gender-select-label = ジェンダー
+farmer-gender-select-male = 男性
+farmer-gender-select-female = 女性
+farmer-gender-select-nonbinary = ノンバイナリー
 stardew-farmer-no-nonbinary-error = ！！ 非二値テキストなし ！！

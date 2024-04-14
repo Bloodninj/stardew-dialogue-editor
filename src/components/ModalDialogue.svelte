@@ -1,6 +1,12 @@
 <script>
     export let showModal; // bool
     export let dialogue; // HTMLDialogElement
+
+    $: if (dialogue && showModal) {
+        if (!dialogue.open) {
+            dialogue.showModal();
+        }
+    }
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->

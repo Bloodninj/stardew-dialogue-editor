@@ -31,10 +31,10 @@ pico8-add-message = Add message
 pico8-add-message-placeholder = This is a test message
 
 page-header = Stardew Dialog Editor
-stardew-farmer-gender-label = Gender
-stardew-farmer-gender-select-male = Male
-stardew-farmer-gender-select-female = Female
-stardew-farmer-gender-select-nonbinary = Non-binary
+farmer-gender-select-label = Gender
+farmer-gender-select-male = Male
+farmer-gender-select-female = Female
+farmer-gender-select-nonbinary = Non-binary
 stardew-farmer-no-nonbinary-error = !!! No non-binary text for this message! !!!
 stardew-dialogue-maker-gender-any = Any
 stardew-dialogue-maker-gender-male = Male
