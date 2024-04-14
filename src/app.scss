@@ -10,7 +10,7 @@ $nav-tabs-border-color: color-contrast($primary);
 $nav-link-color: color-contrast($secondary);
 $nav-link-disabled-color: $secondary;
 $navbar-light-color: color-contrast($primary);
-$navbar-dark-color: $secondary;
+$navbar-dark-color: color-contrast($primary);;
 $code-color: rgb(51, 9, 74);
 $code-color-dark: rgb(24, 5, 35);
 
@@ -197,7 +197,7 @@ body {
     }
     background-image: url("/images/bg/hills.png"), url("/images/bg/stars.png"), linear-gradient(to bottom, #27008f 0%, #00d7ff 100%);
     background-position-y: bottom, top, bottom;
-    background-attachment: fixed, fixed, default;
+    background-attachment: default, default, default;
     background-repeat: repeat-x, repeat-x, no-repeat;
     background-size: default;
     
@@ -280,3 +280,13 @@ input, select, textarea {
     }
 }
 
+.nav-link {
+    font-weight: bold;
+    & > button:disabled {
+        font-weight: normal;
+    }
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}

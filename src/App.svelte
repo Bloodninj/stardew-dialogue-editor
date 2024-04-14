@@ -3,8 +3,8 @@
   import { negotiateLanguages } from "@fluent/langneg";
   import { writable, derived, get } from "svelte/store";
   import { fly } from "svelte/transition";
-  import StardewBox from "./assets/StardewBox.svelte";
-  import DialogueMakerModal from "./DialogueMakerModal.svelte";
+  import StardewBox from "./components/StardewBox.svelte";
+  import DialogueMakerModal from "./components/DialogueMakerModal.svelte";
 
   const controlColourCodes = {
     "0": "p8-black",
@@ -125,34 +125,40 @@
       let msg = msgArray[i];
       // console.log(msg);
       if (msg.type == "dialogue") {
+        // Handle gender-switch command
         if (msg.female.text != null && msg.nonbinary.text != null) {
           // has all 3 texts
           let sameExpressions = (msg.male.expression == msg.female.expression == msg.nonbinary.expression);
-          if (sameExpressions) {
+          if (msg.male.expression && sameExpressions) {
             let expr = "";
             expr = msg.male.expression;
-            outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}^${msg.nonbinary.text}\}\$${expr}`);
+            outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}^${msg.nonbinary.text}\}\$\$${expr}`);
             // console.log(`3 with same expr: ${outputString}`);
           } else {
-            outputString = outputString.concat(`\$\{${msg.male.text}${msg.male.expression}^${msg.female.text}${msg.female.expression}^${msg.nonbinary.text}${msg.nonbinary.expression}\}\$`);
+            outputString = outputString.concat(`\$\{${msg.male.text}\$${msg.male.expression}^${msg.female.text}\$${msg.female.expression}^${msg.nonbinary.text}\$${msg.nonbinary.expression}\}\$`);
             // console.log(`3 with different expr: ${outputString}`);
           }
         }
-        else if (msg.female.text != null) {
+        else if (msg.male.expression && msg.female.text != null) {
           // has male and female
           let sameExpressions = (msg.male.expression == msg.female.expression);
           let expr = "";
           if (sameExpressions) {
             expr = msg.male.expression;
-            outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}\}\$${expr}`);
+            outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}\}\$\$${expr}`);
             // console.log(`2 with same expr: ${msg.male.text} :: ${msg.female.text}`);
           } else {
-            outputString = outputString.concat(`\$\{${msg.male.text}${msg.male.expression}^${msg.female.text}${msg.female.expression}\}\$${expr}`);
+            outputString = outputString.concat(`\$\{${msg.male.text}\$${msg.male.expression}^${msg.female.text}\$${msg.female.expression}\}\$`);
           }
         }
         else {
           // same text for all genders
-          outputString = outputString.concat(`${msg.male.text}${msg.male.expression}`);
+          if (msg.male.text) {
+            outputString = outputString.concat(`${msg.male.text}`);
+          }
+          if (msg.male.expression) {
+            outputString = outputString.concat(`\$${msg.male.expression}`);
+          }
         }
         // console.log(outputString);
       }
@@ -363,6 +369,7 @@
         })
     });
   })()
+  console.log($stardewSplitDialogue);
 </script>
 
 <main>
@@ -385,7 +392,7 @@
       </div>
     </div>
   </nav>
-    <div class="container-lg stardew-text-box">
+    <div class="container-lg stardew-text-box py-2">
       <form>
         <div class="row g-2">
             <div class="col-md-auto">
@@ -426,12 +433,12 @@
         <div class="col-12">
 
           <label class="form-label" for="string-input-texarea">
-            {getMessage("stardew-dialogue-maker-input-string-textarea-label")}
+            {getMessage("stardew-dialogue-maker-input-string-input-label")}
           </label>
-          <textarea class="form-control mb-2" id="string-input-textarea" placeholder={getMessage("stardew-dialogue-maker-input-string-textarea-placeholder")} bind:value={inputString} rows="4"/>
+          <input class="form-control mb-2" id="string-input-input" placeholder={getMessage("stardew-dialogue-maker-input-string-input-placeholder")} bind:value={inputString} />
         </div>
         <div class="col-auto mx-auto">
-          <button class="btn btn-primary border border-secondary" on:click|preventDefault={(e) => $stardewSplitDialogue = updateStardewDialogueParse(inputString)}>
+          <button class="btn btn-primary border border-secondary" on:click|preventDefault={(e) => $stardewSplitDialogue = updateStardewDialogueParse(inputString)} disabled={!inputString}>
             {getMessage("stardew-dialogue-maker-input-parse-button")}
           </button>
         </div>
