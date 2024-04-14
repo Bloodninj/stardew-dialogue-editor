@@ -52,14 +52,14 @@ stardew-dialogue-maker-expression-laughing = Laughing
 stardew-dialogue-maker-expression-unique = Unique
 stardew-dialogue-maker-expression-angry = Angry
 
-
+# Forms
 stardew-dialogue-maker-edit-button = Edit
 stardew-dialogue-maker-save-changes-button = Save changes
 stardew-dialogue-maker-add-new-message = Add message
 stardew-dialogue-maker-remove-message = Delete
 stardew-dialogue-maker-text-placeholder = Bit nippy out, innit?
 stardew-dialogue-maker-raw-output-label = Raw output:
-stardew-dialogue-maker-input-string-textarea-label = Input string:
-stardew-dialogue-maker-input-string-textarea-placeholder = Paste a raw dialogue string here
+stardew-dialogue-maker-input-string-input-label = Input string:
+stardew-dialogue-maker-input-string-input-placeholder = Paste a raw dialogue string here
 stardew-dialogue-maker-example-input = Hello world!#This is a test message!
 stardew-dialogue-maker-input-parse-button = Parse
