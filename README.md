@@ -7,6 +7,7 @@ This is a web tool for creating and editing Stardew Valley game dialogue.
 * Add and remove messages from existing dialogues
 * Translatable interface using the excellent [Fluent syntax](https://projectfluent.org/)
 * Page theme adapts to user's browser light/dark mode preference
+* Can be installed as a PWA (work in progress)
 
 ### Planned features
 
