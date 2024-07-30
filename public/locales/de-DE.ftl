@@ -36,7 +36,7 @@ delete-warning-question = Nachricht wirklich entfernen?
 delete-warning-yes-button = Entfernen
 delete-warning-no-button = Abbrechen
 
-message-list-no-messages = Es gibt keine Nachricthen in dieser Text.
+message-list-no-messages = Es gibt keine Nachrichten in dieser Text.
 
 farmer-gender-select-label = Geschlecht
 farmer-gender-select-male = Männlich
