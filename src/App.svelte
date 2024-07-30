@@ -1,81 +1,47 @@
-<script>
-  import { FluentBundle, FluentResource } from "@fluent/bundle";
+<script lang="ts">
+  import { FluentBundle, FluentResource, type Message } from "@fluent/bundle";
   import { negotiateLanguages } from "@fluent/langneg";
-  import { writable, derived, get } from "svelte/store";
+  import { writable, derived, get, type Writable } from "svelte/store";
   import { flip } from "svelte/animate";
-  import { send, receive } from "./transition"
   import { fade, fly } from "svelte/transition";
   import StardewBox from "./components/StardewBox.svelte";
   import DialogueMakerModal from "./components/DialogueMakerModal.svelte";
-    import DeleteWarningModal from "./components/QuestionModal.svelte";
-    import QuestionModal from "./components/QuestionModal.svelte";
-
-  const controlColourCodes = {
-    "0": "p8-black",
-    "1": "p8-dark-blue",
-    "2": "p8-dark-purple",
-    "3": "p8-dark-green",
-    "4": "p8-brown",
-    "5": "p8-darkgrey",
-    "6": "p8-lightgrey",
-    "7": "p8-white",
-    "8": "p8-red",
-    "9": "p8-orange",
-    "10": "p8-yellow",
-    "11": "p8-green",
-    "12": "p8-blue",
-    "13": "p8-lavender",
-    "14": "p8-pink",
-    "15": "p8-light-peach",
-    "-16": "p8-extra-brownish-black",
-    "-15": "p8-extra-darker-blue",
-    "-14": "p8-extra-darker-purple",
-    "-13": "p8-extra-turquoise",
-    "-12": "p8-extra-dark-brown",
-    "-11": "p8-extra-darker-grey",
-    "-10": "p8-extra-medium-grey",
-    "-9": "p8-extra-banana-yellow",
-    "-8": "p8-extra-dark-red",
-    "-7": "p8-extra-dark-orange",
-    "-6": "p8-extra-lime-green",
-    "-5": "p8-extra-medium-green",
-    "-4": "p8-extra-deep-blue",
-    "-3": "p8-extra-mauve",
-    "-2": "p8-extra-dark-peach",
-    "-1": "p8-extra-medium-peach"
-  };
+  import QuestionModal from "./components/QuestionModal.svelte";
+  import Icon from "./components/Icon.svelte";
+    import type { Pattern } from "@fluent/bundle/esm/ast";
 
   let preferredLanguages = navigator.languages.slice();
-  const AVAILABLE_LANGS = ["en-GB", "en-US","de-DE", "pt-BR", "nl-NL","ja-JP", "sl-SI", "mn", "iu", "ar"];
-  const DEFAULT_LANG = "en-GB";
+  const AVAILABLE_LANGS: string[] = ["en-GB", "en-US","de-DE", "pt-BR", "nl-NL","ja-JP", "sl-SI", "mn", "iu", "ar"];
+  const DEFAULT_LANG: string = "en-GB";
   const supportedLocales = negotiateLanguages(
     navigator.languages,
     AVAILABLE_LANGS,
     { defaultLocale: DEFAULT_LANG }
   );
   
-  export const testLocaleCount = writable(supportedLocales.length);
-  export const chosenLocale = writable(supportedLocales[0]);
-  $: fluentDebugMode = false;
+  export const testLocaleCount: Writable<number> = writable(supportedLocales.length);
+  export const chosenLocale: Writable<string> = writable(supportedLocales[0]);
+  export let fluentDebugMode: boolean = false;
 
-  let langResourceMap = new Map();
+  let langResourceMap: Map<string,FluentBundle> = new Map();
 
   export const stardewPlayerGender = writable("male");
-  let showDialogueModal = false;
-  let showDeleteModal = false;
-  let editMode = false;
-  let warnOnDelete = true;
-  let userChoseDelete = false;
-  let currentStringEditIndex = -1;
+  let showDialogueModal: boolean = false;
+  let showDeleteModal: boolean = false;
+  let editMode: boolean = false;
+  let warnOnDelete: boolean = true;
+  let userChoseDelete: boolean = false;
+  let currentStringEditIndex: number = -1;
+  let inputString: string = "";
   $: inputString = "";
 
   async function loadFluentResources() {
     for await (const lang of AVAILABLE_LANGS) {
       // console.log(lang);
-      const response = await fetch(`/locales/${lang}.ftl`);
-      const resource = new FluentResource(await response.text());
-      let newBundle = new FluentBundle([lang]);
-      let errors = newBundle.addResource(resource);
+      const response: Response = await fetch(`/locales/${lang}.ftl`);
+      const resource: FluentResource = new FluentResource(await response.text());
+      let newBundle: FluentBundle = new FluentBundle([lang]);
+      let errors: Error[] = newBundle.addResource(resource);
       if (errors.length) {
         for (const e of errors){
           console.log(e.message);
@@ -83,20 +49,22 @@
       }
       langResourceMap.set(lang,newBundle);
     }
+    let el: HTMLElement = document.getElementById("still-loading");
+    el.hidden = true;
   }
 
-  $: getMessage = (messageId, params = null) => {
+  $: getMessage = (messageId: string, params = null): string => {
     try {
       if (fluentDebugMode) {
         return `<fluent:${messageId}>`;
       }
-      let bnd = langResourceMap.get($chosenLocale);
-      let msg = bnd.getMessage(messageId);
+      let bnd: FluentBundle = langResourceMap.get($chosenLocale);
+      let msg: Message = bnd.getMessage(messageId);
       if (msg.value) {
         if (params != null) {
           return bnd.formatPattern(msg.value, params);
         }
-        return msg.value;
+        return bnd.formatPattern(msg.value);
       } else {
         bnd = langResourceMap.get(DEFAULT_LANG);
         msg = bnd.getMessage(messageId);
@@ -104,7 +72,7 @@
           if (params != null) {
             return bnd.formatPattern(msg.value, params);
           }
-          return msg.value;
+          return bnd.formatPattern(msg.value);
         } else {
           return messageId;
         }
@@ -130,20 +98,20 @@
     let outputString = "";
     for (let i=0;i<msgArray.length;i++) {
       let msg = msgArray[i];
-      // console.log(msg);
+      console.log(msg);
       if (msg.type == "dialogue") {
         // Handle gender-switch command
         if (msg.female.text != null && msg.nonbinary.text != null) {
           // has all 3 texts
-          let sameExpressions = (msg.male.expression == msg.female.expression == msg.nonbinary.expression);
+          let sameExpressions = (msg.male.expression == msg.female.expression && msg.male.expression == msg.nonbinary.expression);
           if (msg.male.expression && sameExpressions) {
             let expr = "";
             expr = msg.male.expression;
             outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}^${msg.nonbinary.text}\}\$\$${expr}`);
-            // console.log(`3 with same expr: ${outputString}`);
+            console.log(`3 with same expr: ${outputString}`);
           } else {
             outputString = outputString.concat(`\$\{${msg.male.text}\$${msg.male.expression}^${msg.female.text}\$${msg.female.expression}^${msg.nonbinary.text}\$${msg.nonbinary.expression}\}\$`);
-            // console.log(`3 with different expr: ${outputString}`);
+            console.log(`3 with different expr: ${outputString}`);
           }
         }
         else if (msg.male.expression && msg.female.text != null) {
@@ -153,9 +121,10 @@
           if (sameExpressions) {
             expr = msg.male.expression;
             outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}\}\$\$${expr}`);
-            // console.log(`2 with same expr: ${msg.male.text} :: ${msg.female.text}`);
+            console.log(`2 with same expr: ${msg.male.text} :: ${msg.female.text}`);
           } else {
             outputString = outputString.concat(`\$\{${msg.male.text}\$${msg.male.expression}^${msg.female.text}\$${msg.female.expression}\}\$`);
+            console.log(`2 with different expr: ${msg.male.text} :: ${msg.female.text}`);
           }
         }
         else {
@@ -167,13 +136,12 @@
             outputString = outputString.concat(`\$${msg.male.expression}`);
           }
         }
-        // console.log(outputString);
       }
       if (i < msgArray.length-1) {
         outputString = outputString.concat("#");
       }
     }
-    // console.log(outputString);
+    console.log(outputString);
     return outputString;
   }
 
@@ -383,7 +351,7 @@
 
 <main>
   {#await x}
-    <p>Loading...</p>
+  <span></span>
   {:then}
   <nav class="navbar navbar-expand-md stardew-text-scroll">
     <div class="container-fluid">
@@ -431,14 +399,13 @@
         </div>
       </form>
 
-
-      <p>{ getMessage("preferred-languages") }</p>
+      <p>{getMessage("preferred-languages")}</p>
       <ol>
-        {#each preferredLanguages as lang}
-        <li>{lang}</li>
+        {#each supportedLocales as loc}
+        <li>{loc}</li>
         {/each}
       </ol>
-      <p>{ getMessage("browser-locales-count", {localeCount: ($testLocaleCount) ? $testLocaleCount : supportedLocales.length}) }</p>
+      <p>{getMessage("browser-locales-count",{ localeCount: supportedLocales.length})}</p>
  
       <!-- <StardewBox>
         <p slot="text">Hello world!</p>
@@ -483,16 +450,36 @@
             </div>
           </StardewBox>
           <div class="d-grid d-md-block gap-2 mb-2">
-            <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showDialogueModal = true; editMode = true}}>{getMessage("stardew-dialogue-maker-edit-button")}</button>
-            <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showDialogueModal = true; editMode=false}}>{getMessage("stardew-dialogue-maker-add-new-text")}</button>
-            <button class="btn btn-primary border border-secondary">{getMessage("stardew-dialogue-maker-add-new-command")}</button>
+            <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showDialogueModal = true; editMode = true}}>
+              <span class="d-flex align-items-center">
+                <Icon name="edit" size={20} />
+                {getMessage("stardew-dialogue-maker-edit-button")}
+              </span>
+            </button>
+            <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showDialogueModal = true; editMode=false}}>
+              <span class="d-flex align-items-center">
+                <Icon name="plus" size={20} />
+                {getMessage("stardew-dialogue-maker-add-new-text")}
+              </span>
+            </button>
+            <button class="btn btn-primary border border-secondary">
+              <span class="d-flex align-items-center">
+                <Icon name="magic" size={20} />
+                {getMessage("stardew-dialogue-maker-add-new-command")}
+              </span>
+            </button>
             <button class="btn btn-danger border border-danger-subtle"
             on:click={(e)=> {
               currentStringEditIndex = i;
               if (warnOnDelete) {
                 showDeleteModal = true;
               }
-            }}>{getMessage("stardew-dialogue-maker-delete-message")}</button>
+            }}>
+            <span class="d-flex align-items-center">
+              <Icon name="delete-white" size={20} />
+              {getMessage("stardew-dialogue-maker-delete-message")}
+            </span>
+          </button>
       </div>
     </li>
     {/each}
@@ -506,11 +493,14 @@
               currentStringEditIndex = 0; showDialogueModal = true;
             }}
             on:close={(e) => {
-              if (e.returnValue) {
+              if (e) {
 
               }
             }}>
-              {getMessage("stardew-dialogue-maker-add-new-message")}
+              <span class="d-flex align-items-center">
+                <Icon name="plus" size={20} />
+                {getMessage("stardew-dialogue-maker-add-new-message")}
+              </span>
             </button>
           </div>
         </div>
@@ -518,16 +508,29 @@
 
       <div>
         <label class="form-label" for="dialogue-raw-string-code">{getMessage("stardew-dialogue-maker-raw-output-label")}</label>
-        <p>
-          <code id="dialogue-raw-string-code">{$rawOutputString}</code>
-        </p>
+        <pre>
+          <samp id="dialogue-raw-string-code">{$rawOutputString}</samp>
+        </pre>
+
 
       </div>
       
       <DialogueMakerModal bind:showModal={showDialogueModal} bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} bind:editMode></DialogueMakerModal>
-      <QuestionModal bind:showModal={showDeleteModal} bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} >
+      <QuestionModal bind:showModal={showDeleteModal} bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} bind:runCloseInstantly={warnOnDelete}>
         <span slot="header-text">{getMessage("delete-warning-header")}</span>
-        <span slot="question">{getMessage("delete-warning-question")}</span>
+        <div slot="question">
+          <p class="text-center">
+            {getMessage("delete-warning-question")}
+          </p>
+
+            <div class="form-check-inline mx-auto">
+              <input class="form-check-input" type="checkbox" id="warnOnDeleteCheck" bind:checked={warnOnDelete} />
+              <label class="form-check-label" for="warnOnDeleteCheck">
+                {getMessage("stardew-dialogue-maker-warn-on-dialogue-delete-checkbox")}
+              </label>
+            </div>
+
+        </div>
         <span slot="yes-button">{getMessage("delete-warning-yes-button")}</span>
         <span slot="no-button">{getMessage("delete-warning-no-button")}</span>
       </QuestionModal>

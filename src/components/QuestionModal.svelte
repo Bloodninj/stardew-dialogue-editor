@@ -5,6 +5,7 @@
     export let getMessage; // i18n function
     export let textArray; // array of msg objects
     export let msgIndex; // integer, array index of current message
+    export let runCloseInstantly; // bool
     let response;
     let dialogue;
 
@@ -17,6 +18,7 @@
             textArray = textArray;
         }
     }
+
 </script>
 
 <ModalDialogue
@@ -25,18 +27,16 @@
         <slot name="header-text">Question</slot>
     </h1>
     <div slot="dialogue-body">
-        <p>
-            <slot name="question">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit?
-            </slot>
-        </p>
-        <div class="row g-2">
+        <slot name="question">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit?
+        </slot>
+        <form class="row g-2">
             <button class="btn btn-primary border border-primary-subtle" id="no-button" on:click={onClose} formmethod="dialog" value="no" >
                 <slot name="no-button">No</slot>
             </button>
             <button class="btn btn-danger border border-danger-subtle" id="yes-button" type="submit" on:click|preventDefault={onClose} value="yes">
                 <slot name="yes-button">Yes</slot>
             </button>
-        </div>
+        </form>
     </div>
 </ModalDialogue>

@@ -31,6 +31,13 @@ pico8-add-message = Nachricht hinzufügen
 pico8-add-message-placeholder = Hier gibt's eine Testnachricht
 
 page-header = Stardew Text-Editor
+delete-warning-header = Achtung!
+delete-warning-question = Nachricht wirklich entfernen?
+delete-warning-yes-button = Entfernen
+delete-warning-no-button = Abbrechen
+
+message-list-no-messages = Es gibt keine Nachricthen in dieser Text.
+
 farmer-gender-select-label = Geschlecht
 farmer-gender-select-male = Männlich
 farmer-gender-select-female = Weiblich

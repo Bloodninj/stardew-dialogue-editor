@@ -1,0 +1,43 @@
+{
+    "name": "Stardew Dialogue Editor",
+    "short_name": "Stardew Dialogue Editor",
+    "start_url": ".",
+    "display": "fullscreen",
+    "background_color": "#e8a555",
+    "description": "An editor for Stardew Valley dialogue.",
+    "theme_color": "#e8a555",
+    "icons": [
+      {
+        "src": "images/pwa/icon-square.png",
+        "sizes": "107x107",
+        "type": "image/png"
+      },
+      {
+        "src": "images/pwa/icon-square-4x.png",
+        "sizes": "428x428",
+        "type": "image/png"
+      },
+      {
+        "src": "images/pwa/icon-square-5x.png",
+        "sizes": "535x535",
+        "type": "image/png"
+      }
+    ],
+    "screenshots" : [
+        {
+          "src": "images/pwa/screenshot-wide-1.png",
+          "sizes": "1690x1968",
+          "type": "image/png",
+          "form_factor": "wide",
+          "label": "String editor interface"
+        },
+        {
+          "src": "images/pwa/screenshot-wide-2.png",
+          "sizes": "1690x1968",
+          "type": "image/png",
+          "form_factor": "wide",
+          "label": "String editor interface"
+        }
+    ]
+  }
+  

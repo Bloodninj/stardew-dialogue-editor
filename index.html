@@ -3,14 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/images/duck.png" />
+    <link rel="manifest" href="/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#e8a555" />
     <title>Vite + Svelte</title>
   </head>
   <body>
     <div style="margin-bottom: 12rem;">
+      <div id="still-loading" class="container-lg stardew-text-box py-2">
+        <div class="d-grid">
+          <div class="g-12">
+            <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="app"></div>
     </div>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js" async></script>
   </body>
   <script src="/js/bootstrap.min.js"></script>
 </html>

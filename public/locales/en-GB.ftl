@@ -27,9 +27,6 @@ browser-locales-count = {
         *[other] It looks like your browser prefers { $localeCount } locales.
 }
 
-pico8-add-message = Add message
-pico8-add-message-placeholder = This is a test message
-
 page-header = Stardew Dialogue Editor
 stardew-dialogue-maker-warn-on-dialogue-delete-checkbox = Warn on message deletion
 delete-warning-header = Warning!
