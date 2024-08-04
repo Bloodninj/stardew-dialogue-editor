@@ -11,7 +11,7 @@
     import type { Pattern } from "@fluent/bundle/esm/ast";
 
   let preferredLanguages = navigator.languages.slice();
-  const AVAILABLE_LANGS: string[] = ["en-GB", "en-US","de-DE", "pt-BR", "nl-NL","ja-JP", "sl-SI", "mn", "iu", "ar"];
+  const AVAILABLE_LANGS: string[] = ["en-GB", "en-US","de-DE", "hu-HU", "pt-BR", "nl-NL","ja-JP", "sl-SI", "mn", "iu", "ar"];
   const DEFAULT_LANG: string = "en-GB";
   const supportedLocales = negotiateLanguages(
     navigator.languages,
