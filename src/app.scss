@@ -276,8 +276,12 @@ input, select, textarea {
     background-color: $secondary !important;
     color: color-contrast($secondary) !important;
     &::placeholder {
-        color: color-contrast($secondary);
+        color: darken(color-contrast($secondary), 20%) !important;
     }
+}
+
+.btn-primary, .btn-secondary, .btn-warning, .btn-error, .btn-danger {
+    border-color: $secondary !important;
 }
 
 .nav-link {
