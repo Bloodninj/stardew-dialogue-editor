@@ -360,60 +360,37 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarToggler">
-          <form class="d-flex mx-2">
-            <div class="form-check form-check-inline">
-              <label class="form-label" for="fluent-debug-checkbox">Toggle Fluent debug mode</label>
-              <input class="form-check-input" type="checkbox" id="fluent-debug-checkbox" bind:checked={fluentDebugMode} />
-            </div>
-          </form>
-          <form class="d-flex mx-2">
-            <div class="form-check form-check-inline">
-              <label class="form-label" for="warn-on-dialogue-delete-checkbox">{getMessage("stardew-dialogue-maker-warn-on-dialogue-delete-checkbox")}</label>
-              <input class="form-check-input" type="checkbox" id="warn-on-dialogue-delete-checkbox" bind:checked={warnOnDelete} />
-            </div>
-          </form>
+        <form>
+          <div class="row g-2">
+              <div class="col-md-auto">
+                <label class="form-label visually-hidden" for="language-select">{getMessage("language-select")}</label>
+                <select class="form-select" id="language-select" bind:value={$chosenLocale}>
+                  {#each AVAILABLE_LANGS as lang}
+                  <option value={lang}>{ getMessage(`locale-flag-${lang.toLowerCase()}`) } { getMessage(`locale-name-${lang.toLowerCase()}`) }</option>
+                  {/each}
+                </select>
+              </div>
+          </div>
+        </form>
+        <form class="d-flex mx-2">
+          <div class="form-check form-check-inline">
+            <label class="form-label" for="fluent-debug-checkbox">Toggle Fluent debug mode</label>
+            <input class="form-check-input" type="checkbox" id="fluent-debug-checkbox" bind:checked={fluentDebugMode} />
+          </div>
+        </form>
+        <form class="d-flex mx-2">
+          <div class="form-check form-check-inline">
+            <label class="form-label" for="warn-on-dialogue-delete-checkbox">{getMessage("stardew-dialogue-maker-warn-on-dialogue-delete-checkbox")}</label>
+            <input class="form-check-input" type="checkbox" id="warn-on-dialogue-delete-checkbox" bind:checked={warnOnDelete} />
+          </div>
+        </form>
       </div>
     </div>
   </nav>
     <div class="container-lg stardew-text-box py-2">
-      <form>
-        <div class="row g-2">
-            <div class="col-md-auto">
-              <label class="form-label visually-hidden" for="language-select">{getMessage("language-select")}</label>
-              <select class="form-select" id="language-select" bind:value={$chosenLocale}>
-                {#each AVAILABLE_LANGS as lang}
-                <option value={lang}>{ getMessage(`locale-flag-${lang.toLowerCase()}`) } { getMessage(`locale-name-${lang.toLowerCase()}`) }</option>
-                {/each}
-              </select>
-            </div>
-            <div class="col-md-auto">
-              <input class="form-control" type="number" bind:value={$testLocaleCount} min="1" aria-label="Number formatting test" />   
-            </div>
-            <div class="col-md-auto">
-              <select class="form-select" bind:value={$stardewPlayerGender} aria-label={getMessage("farmer-gender-select-label")}>
-                <option value="male">{getMessage("farmer-gender-select-male")}</option>
-                <option value="female">{getMessage("farmer-gender-select-female")}</option>
-                <option value="nonbinary">{getMessage("farmer-gender-select-nonbinary")}</option>
-              </select>
-            </div>
-        </div>
-      </form>
-
-      <p>{getMessage("preferred-languages")}</p>
-      <ol>
-        {#each supportedLocales as loc}
-        <li>{loc}</li>
-        {/each}
-      </ol>
-      <p>{getMessage("browser-locales-count",{ localeCount: supportedLocales.length})}</p>
- 
-      <!-- <StardewBox>
-        <p slot="text">Hello world!</p>
-        <h1 slot="expression">🙂</h1>
-      </StardewBox> -->
+      
       <form class="row">
         <div class="col-12">
-
           <label class="form-label" for="string-input-texarea">
             {getMessage("stardew-dialogue-maker-input-string-input-label")}
           </label>
@@ -424,7 +401,6 @@
             {getMessage("stardew-dialogue-maker-input-parse-button")}
           </button>
         </div>
-
       </form>
       
       {#if $stardewSplitDialogue.length}
@@ -535,22 +511,6 @@
         <span slot="no-button">{getMessage("delete-warning-no-button")}</span>
       </QuestionModal>
 
-
-      <!-- <form>
-        <button type="button" class="mb-2 btn btn-primary" on:click={ addPicoMessage(getMessage("pico8-add-message-placeholder"))}>{ getMessage("pico8-add-message")}</button>
-      </form>
-      {#if picoText}
-      <form class="mb-2">
-        {#each picoText as s}
-        <div class="row mb-2 form-group ">
-          <div class="col-12 col-lg-6">
-            <input class="mb-1 form-control form-control-sm" type="text" bind:value={s} />
-          </div>
-          <p class="col-12 col-lg-6 pico-string" on:change={this.innerHTML = formatText(s)}>{@html formatText(s)}</p>
-        </div>
-          {/each}
-      </form>
-      {/if} -->
     </div>
   {/await}
   
