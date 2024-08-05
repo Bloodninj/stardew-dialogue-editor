@@ -1,14 +1,17 @@
 <script lang="ts">
   import { FluentBundle, FluentResource, type Message } from "@fluent/bundle";
   import { negotiateLanguages } from "@fluent/langneg";
-  import { writable, derived, get, type Writable } from "svelte/store";
+  import { writable, derived, get, type Writable, type Readable } from "svelte/store";
   import { flip } from "svelte/animate";
   import { fade, fly } from "svelte/transition";
-  import StardewBox from "./components/StardewBox.svelte";
+  import StardewBox from "./components/TabbedDialogueBox.svelte";
   import DialogueMakerModal from "./components/DialogueMakerModal.svelte";
   import QuestionModal from "./components/QuestionModal.svelte";
   import Icon from "./components/Icon.svelte";
-    import type { Pattern } from "@fluent/bundle/esm/ast";
+  import type { Pattern } from "@fluent/bundle/esm/ast";
+  import type { DialogueMessage } from "./types/types";
+    import TabbedDialogueBox from "./components/TabbedDialogueBox.svelte";
+
 
   let preferredLanguages: string[];
   $: preferredLanguages = navigator.languages.slice();
@@ -54,7 +57,7 @@
     el.hidden = true;
   }
 
-  $: getMessage = (messageId: string, params = null): string => {
+  $: getMessage = (messageId: string, params: any = null): string => {
     try {
       if (fluentDebugMode) {
         return `<fluent:${messageId}>`;
@@ -90,23 +93,23 @@
   }
   const stardewTestDialogue = "${Oh... you're that new farmer boy, aren't you?^Oh... You're that new farmer girl, or whatever. Aren't you?}$$l#$e#Huh? Oh... I'm Haley.#$e#${Hmm... If it weren't for those horrendous clothes you might actually be cute.^Hmm... If it weren't for those horrendous clothes you might actually be pretty... Actually, never mind.^Hmm... If it weren't for those horrendous clothes you might actually be attractive.}$$h"
   // $: stardewSplitDialogue = [{male: { text: null, expression: null }, female: { text: null, expression: null }, nonbinary: { text: null, expression: null}}];
-  export const stardewSplitDialogue = writable(updateStardewDialogueParse(inputString));
+  export const stardewSplitDialogue = writable(parseDialogue(inputString));
   $: stardewDisplayDialogue = $stardewSplitDialogue;
   // stardewSplitDialogue = updateStardewDialogueParse(stardewTestDialogue);
-  export const rawOutputString = derived(stardewSplitDialogue, encodeDialogueArray);
+  export const rawOutputString: Readable<string> = derived(stardewSplitDialogue, encodeDialogueArray);
 
-  function encodeDialogueArray(msgArray) {
-    let outputString = "";
+  function encodeDialogueArray(msgArray: DialogueMessage[]): string {
+    let outputString: string = "";
     for (let i=0;i<msgArray.length;i++) {
-      let msg = msgArray[i];
+      let msg: DialogueMessage = msgArray[i];
       console.log(msg);
       if (msg.type == "dialogue") {
         // Handle gender-switch command
         if (msg.female.text != null && msg.nonbinary.text != null) {
           // has all 3 texts
-          let sameExpressions = (msg.male.expression == msg.female.expression && msg.male.expression == msg.nonbinary.expression);
+          let sameExpressions: boolean = (msg.male.expression == msg.female.expression && msg.male.expression == msg.nonbinary.expression);
           if (msg.male.expression && sameExpressions) {
-            let expr = "";
+            let expr: string = "";
             expr = msg.male.expression;
             outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}^${msg.nonbinary.text}\}\$\$${expr}`);
             console.log(`3 with same expr: ${outputString}`);
@@ -115,13 +118,13 @@
             console.log(`3 with different expr: ${outputString}`);
           }
         }
-        else if (msg.male.expression && msg.female.text != null) {
+        else if (msg.female.text != null) {
           // has male and female
-          let sameExpressions = (msg.male.expression == msg.female.expression);
-          let expr = "";
+          let sameExpressions: boolean = (msg.male.expression == msg.female.expression);
+          let expr: string = "";
           if (sameExpressions) {
             expr = msg.male.expression;
-            outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}\}\$\$${expr}`);
+            outputString = outputString.concat(`\$\{${msg.male.text}^${msg.female.text}\}\$${expr}`);
             console.log(`2 with same expr: ${msg.male.text} :: ${msg.female.text}`);
           } else {
             outputString = outputString.concat(`\$\{${msg.male.text}\$${msg.male.expression}^${msg.female.text}\$${msg.female.expression}\}\$`);
@@ -142,11 +145,11 @@
         outputString = outputString.concat("#");
       }
     }
-    console.log(outputString);
+    // console.log(outputString);
     return outputString;
   }
 
-  function updateStardewDialogueParse(text) {
+  function parseDialogue(text: string): DialogueMessage[] {
     if (!text) {
       text = "";
     }
@@ -155,15 +158,15 @@
       text = text.replace(quotesRegex,"$1");
     }
 
-    let arr = text.split("#");
+    let arr: string[] = text.split("#");
     // console.log(arr);
-    let formattedArr = [];
+    let formattedArr: DialogueMessage[] = [];
     if (arr.length < 1) {
       arr[0] = text;
     }
     for (let i=0;i < arr.length; i++) {
       // console.log(arr[i]);
-      let msgText = {
+      let msgText: DialogueMessage = {
         type: "dialogue",
         male: {
           text: arr[i],
@@ -234,11 +237,12 @@
     return formattedArr;
   }
 
-  function stardewParseExpression(text) {
+  function stardewParseExpression(text: string) {
      // Set expression from dialogue commands
-     let match = text.match(/\$([hsula])$/);
+     let expressionRegex: RegExp = /\$([hsula])$/;
+     let match:RegExpMatchArray|null = text.match(expressionRegex);
       // console.log(match);
-      let expr = "";
+      let expr: string = "";
       if (match) {
         expr = match[1];
         // console.log(`match: ${match[1]}`);
@@ -249,7 +253,7 @@
         //   case "u": { expr = "🥴"; break; }
         //   case "a": { expr = "😡"; break; }
         // }
-        text = text.replace(/\$([hsula])$/,"");
+        text = text.replace(expressionRegex,"");
       }
       return {text: text, expression: expr};
   }
@@ -398,7 +402,7 @@
           <input class="form-control mb-2" id="string-input-input" placeholder={getMessage("stardew-dialogue-maker-input-string-input-placeholder")} bind:value={inputString} />
         </div>
         <div class="col-auto mx-auto">
-          <button class="btn btn-primary border border-secondary" on:click|preventDefault={(e) => $stardewSplitDialogue = updateStardewDialogueParse(inputString)} disabled={!inputString}>
+          <button class="btn btn-primary border border-secondary" on:click|preventDefault={(e) => $stardewSplitDialogue = parseDialogue(inputString)} disabled={!inputString}>
             {getMessage("stardew-dialogue-maker-input-parse-button")}
           </button>
         </div>
@@ -471,10 +475,10 @@
       {/if}
 
 
-        <label class="form-label" for="dialogue-raw-string-code">{getMessage("stardew-dialogue-maker-raw-output-label")}</label>
+      <label class="form-label" for="dialogue-raw-string-code">{getMessage("stardew-dialogue-maker-raw-output-label")}</label>
       <pre class="m-1 p-2 border">
         <code id="dialogue-raw-string-code">{$rawOutputString}</code>
-        </pre>
+      </pre>
 
 
  
