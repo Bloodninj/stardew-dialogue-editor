@@ -482,14 +482,14 @@
         </div>
       {/if}
 
-      <div>
+
         <label class="form-label" for="dialogue-raw-string-code">{getMessage("stardew-dialogue-maker-raw-output-label")}</label>
-        <pre>
-          <samp id="dialogue-raw-string-code">{$rawOutputString}</samp>
+      <pre class="m-1 p-2 border">
+        <code id="dialogue-raw-string-code">{$rawOutputString}</code>
         </pre>
 
 
-      </div>
+ 
       
       <DialogueMakerModal bind:showModal={showDialogueModal} bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} bind:editMode></DialogueMakerModal>
       <QuestionModal bind:showModal={showDeleteModal} bind:getMessage bind:textArray={$stardewSplitDialogue} bind:msgIndex={currentStringEditIndex} bind:runCloseInstantly={warnOnDelete}>
