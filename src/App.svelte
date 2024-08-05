@@ -411,20 +411,7 @@
           in:fly={{ y: 100, duration: 400 }}
           out:fade={{ duration: 200 }}
           animate:flip={{ duration: 400 }}>
-          <StardewBox hasFemale={msg.female.text != null} hasNonbinary={msg.nonbinary.text != null} suffix={generateLetters(6)} bind:getMessage> 
-            <span slot="male">
-              <p class="stardew-dialogue">{msg.male.text}</p>
-              <h2 class="stardew-expression">{msg.male.expression}</h2>
-            </span>
-            <div slot="female">
-              <p class="stardew-dialogue">{msg.female.text}</p>
-              <h2 class="stardew-expression">{msg.female.expression}</h2>
-            </div>
-            <div slot="nonbinary">
-              <p class="stardew-dialogue">{msg.nonbinary.text}</p>
-              <h2 class="stardew-expression">{msg.nonbinary.expression}</h2>
-            </div>
-          </StardewBox>
+          <TabbedDialogueBox bind:message={msg} suffix={generateLetters(6)} bind:getMessage /> 
           <div class="d-grid d-md-block gap-2 mb-2">
             <button class="btn btn-primary border border-secondary" on:click={(e)=> {currentStringEditIndex = i; showDialogueModal = true; editMode = true}}>
               <span class="d-flex align-items-center">
