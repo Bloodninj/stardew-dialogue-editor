@@ -30,6 +30,9 @@ browser-locales-count = {
 }
 
 page-header = Stardew Dialogue Editor
+
+generic-prompt-yes = Yes
+generic-prompt-no = No
 stardew-dialogue-maker-warn-on-dialogue-delete-checkbox = Warn on message deletion
 delete-warning-header = Warning!
 delete-warning-question = Are you sure you want to delete this message?
