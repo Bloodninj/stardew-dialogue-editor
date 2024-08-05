@@ -10,7 +10,8 @@
   import Icon from "./components/Icon.svelte";
     import type { Pattern } from "@fluent/bundle/esm/ast";
 
-  let preferredLanguages = navigator.languages.slice();
+  let preferredLanguages: string[];
+  $: preferredLanguages = navigator.languages.slice();
   const AVAILABLE_LANGS: string[] = ["en-GB", "en-US","de-DE", "hu-HU", "pt-BR", "nl-NL","ja-JP", "sl-SI", "mn", "iu", "ar"];
   const DEFAULT_LANG: string = "en-GB";
   const supportedLocales = negotiateLanguages(
