@@ -39,7 +39,7 @@ delete-warning-question = Are you sure you want to delete this message?
 delete-warning-yes-button = Yes, delete this
 delete-warning-no-button = No, keep it
 
-message-list-no-messages = There are no messages in this dialogue.
+message-list-no-messages = There are no messages in this dialog.
 
 farmer-gender-select-label = Gender
 farmer-gender-select-male = Male
@@ -70,6 +70,6 @@ stardew-dialogue-maker-delete-message = Delete
 stardew-dialogue-maker-text-placeholder = Pretty cold out, huh?
 stardew-dialogue-maker-raw-output-label = Raw output:
 stardew-dialogue-maker-input-string-input-label = Input string:
-stardew-dialogue-maker-input-string-input-placeholder = Paste a raw dialogue string here
+stardew-dialogue-maker-input-string-input-placeholder = Paste a raw dialog string here
 stardew-dialogue-maker-example-input = Hello world!#This is a test message!
 stardew-dialogue-maker-input-parse-button = Parse
